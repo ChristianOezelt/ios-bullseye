@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isPopoverVisible: Bool = false
-    @State private var isWhoIsThereVisible: Bool = false
+    @State private var sliderValue = 50.0
+    @State private var game = Game()
 
     var body: some View {
         VStack {
@@ -19,7 +20,7 @@ struct ContentView: View {
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
                 .font(.footnote)
-            Text("89")
+            Text(String(game.target))
                 .fontWeight(.black)
                 .font(.largeTitle)
                 .kerning(-1)
@@ -27,7 +28,7 @@ struct ContentView: View {
                 Text("1")
                     .font(.body)
                     .bold()
-                Slider(value: .constant(89), in: 1.0...100.0)
+                Slider(value: self.$sliderValue, in: 1.0...100.0)
                 Text("100")
                     .font(.body)
                     .bold()
@@ -35,18 +36,11 @@ struct ContentView: View {
             Button("Hit me"){
                 self.isPopoverVisible = true
             }.alert(isPresented: $isPopoverVisible, content: {
-                Alert(title: Text("Hello There"),
-                      message: Text("This is my first popup"),
+                let roundedValue: Int = Int(self.sliderValue.rounded())
+                return Alert(title: Text("Hello There"),
+                             message: Text("The slider's value is \(roundedValue).\n" + "You scored \(self.game.calculatePoints(sliderValue: roundedValue)) points this round"),
                       dismissButton: .default(Text("Awesome!")))
             })
-            Button("knock know"){
-                self.isWhoIsThereVisible = true
-            }.alert(isPresented: $isWhoIsThereVisible, content: {
-                Alert(title: Text("Who is there?"),
-                      message: Text("your mum"),
-                      dismissButton: .default(Text("Awesome!")))
-            })
-            
         }
     }
 }
