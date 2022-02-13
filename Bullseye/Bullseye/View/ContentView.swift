@@ -14,61 +14,13 @@ struct ContentView: View {
     
     var body: some View {
         ZStack{
-            Color("BackgroundColor")
-                .edgesIgnoringSafeArea(.all)
+            BackgroundView(game: $game)
             VStack {
-                Text("🎯🎯🎯\nPUT THE BULLSEYE AS CLOSE AS YOU CAN TO")
-                    .foregroundColor(Color("TextColor"))
-                    .bold()
-                    .kerning(2.0)
-                    .multilineTextAlignment(.center)
-                    .lineSpacing(4)
-                    .font(.footnote)
+                InstructionView(game: $game, text: "🎯🎯🎯\nPUT THE BULLSEYE AS CLOSE AS YOU CAN TO")
                     .padding(.leading, 30)
                     .padding(.trailing, 30)
-                Text(String(game.target))
-                    .fontWeight(.black)
-                    .font(.largeTitle)
-                    .kerning(-1)
-                    .foregroundColor(Color("TextColor"))
-                HStack {
-                    Text("1")
-                        .font(.body)
-                        .bold()
-                        .foregroundColor(Color("TextColor"))
-                    Slider(value: self.$sliderValue, in: 1.0...100.0)
-                    Text("100")
-                        .font(.body)
-                        .bold()
-                        .foregroundColor(Color("TextColor"))
-                }.padding()
-                Button(action: {
-                    self.isPopoverVisible = true
-                }){
-                    Text("Hit me".uppercased()).bold().font(.title3)
-                }
-                .padding(20.0)
-                .background(
-                    ZStack{
-                        Color("ButtonColor")
-                        LinearGradient(
-                            gradient: Gradient(
-                                colors: [Color.white.opacity(0.3), Color.clear]),
-                                startPoint: .top,
-                                endPoint: .bottom
-                                       
-                        )
-                    }
-                    
-                )
-                .foregroundColor(Color.white)
-                .cornerRadius(21)
-                .alert(isPresented: $isPopoverVisible, content: {
-                    let roundedValue: Int = Int(self.sliderValue.rounded())
-                    return Alert(title: Text("Hello There"),
-                                 message: Text("The slider's value is \(roundedValue).\n" + "You scored \(self.game.calculatePoints(sliderValue: roundedValue)) points this round"),
-                                 dismissButton: .default(Text("Awesome!")))
-                })
+                GuessSlider(guess: $sliderValue).padding()
+                HitMeButton(isPopoverVisible: $isPopoverVisible, guess: $sliderValue, game: $game)
             }
             
         }
